@@ -5,31 +5,60 @@ pool:
   vmImage: 'ubuntu-latest'
 
 stages:
+# ===============================
+# 1️⃣  Build Stage
+# ===============================
 - stage: Build
+  displayName: "Build and Test"
   jobs:
   - job: Build
+    displayName: "Install dependencies and run tests"
     steps:
     - task: UsePythonVersion@0
       inputs:
         versionSpec: '3.10'
+      displayName: "Set up Python 3.10"
+
     - script: |
         pip install -r app/requirements.txt
-      displayName: 'Install dependencies'
+      displayName: "Install Python dependencies"
+
     - script: |
         echo "Running tests..."
-      displayName: 'Run tests'
+        # pytest or any placeholder test command can go here
+      displayName: "Run unit tests"
 
+# ===============================
+# 2️⃣  Deploy Stage
+# ===============================
 - stage: Deploy
+  displayName: "Provision Infrastructure and Deploy"
   dependsOn: Build
   jobs:
   - job: Deploy
+    displayName: "Deploy resources with Terraform"
+    pool:
+      vmImage: 'ubuntu-latest'
     steps:
+    - checkout: self
+
+    # Install Terraform using the official task
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: '1.8.5'
+      displayName: "Install Terraform"
+
+    # Authenticate with Azure using your service connection
     - task: AzureCLI@2
       inputs:
-        azureSubscription: '<YOUR-AZURE-SERVICE-CONNECTION>'
+        azureSubscription: 'my-azure-sc'  # <-- Use your actual service connection name
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          echo "Deploying Infrastructure..."
+          echo "Initializing and applying Terraform configuration..."
           terraform init
           terraform apply -auto-approve
+
+    - script: |
+        echo "Deployment completed successfully!"
+      displayName: "Confirm Deployment"
