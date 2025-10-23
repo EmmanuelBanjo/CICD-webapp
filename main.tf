@@ -48,7 +48,3 @@ resource "azurerm_app_service" "app" {
     WEBSITES_PORT                       = "5000"
   }
 }
-
-output "app_url" {
-  value = azurerm_app_service.app.default_site_hostname
-}
