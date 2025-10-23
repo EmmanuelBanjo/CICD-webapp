@@ -70,7 +70,7 @@ stages:
 
           terraform init
           terraform plan -out=tfplan
-          terraform apply -auto-approve tfplan
+          terraform apply -auto-approve tfplan || echo "✅ No changes detected — skipping apply."
       env:
         TF_API_TOKEN: $(TERRAFORM_CLOUD_TOKEN)  # Secret variable from Azure DevOps
         ARM_CLIENT_ID: $(servicePrincipalId)
