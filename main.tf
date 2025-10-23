@@ -34,6 +34,11 @@ resource "azurerm_app_service" "app" {
   app_service_plan_id = azurerm_app_service_plan.plan.id
 
   site_config {
-    python_version = "3.10"
+    linux_fx_version = "DOCKER|python:3.10-slim"
+  }
+
+  app_settings = {
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE = "false"
+    WEBSITES_PORT = "5000"
   }
 }
