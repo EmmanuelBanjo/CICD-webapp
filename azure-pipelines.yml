@@ -1,0 +1,35 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.10'
+    - script: |
+        pip install -r app/requirements.txt
+      displayName: 'Install dependencies'
+    - script: |
+        echo "Running tests..."
+      displayName: 'Run tests'
+
+- stage: Deploy
+  dependsOn: Build
+  jobs:
+  - job: Deploy
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: '<YOUR-AZURE-SERVICE-CONNECTION>'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          echo "Deploying Infrastructure..."
+          terraform init
+          terraform apply -auto-approve
