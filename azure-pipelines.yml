@@ -26,7 +26,7 @@ stages:
     steps:
     - task: AzureCLI@2
       inputs:
-        azureSubscription: '<YOUR-AZURE-SERVICE-CONNECTION>'
+        azureSubscription: 'my-azure-sc'
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
