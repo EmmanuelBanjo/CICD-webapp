@@ -50,14 +50,22 @@ stages:
 
     # Authenticate with Azure using your service connection
     - task: AzureCLI@2
+      displayName: 'Run Terraform (Terraform Cloud backend)'
       inputs:
-        azureSubscription: 'my-azure-sc'  # <-- Use your actual service connection name
+        azureSubscription: 'my-azure-sc'  # Azure service connection name
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
           echo "Initializing and applying Terraform configuration..."
+          # Authenticate to Terraform Cloud using an environment variable
+          export TF_TOKEN_app_terraform_io=$(terraform_token)
+
           terraform init
-          terraform apply -auto-approve
+          terraform plan -out=tfplan
+          terraform apply -auto-approve tfplan
+      env:
+        terraform_token: $(TERRAFORM_CLOUD_TOKEN)  # Secret variable from Azure DevOps
+
 
     - script: |
         echo "Deployment completed successfully!"
