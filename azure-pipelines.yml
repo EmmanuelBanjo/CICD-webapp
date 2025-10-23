@@ -56,15 +56,17 @@ stages:
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
+          set -e
           echo "Initializing and applying Terraform configuration..."
-          # Authenticate to Terraform Cloud using an environment variable
-          export TF_TOKEN_app_terraform_io=$(terraform_token)
+          mkdir -p ~/.terraform.d
+          echo '{"credentials":{"app.terraform.io":{"token":"'$TF_API_TOKEN'"}}}' > ~/.terraform.d/credentials.tfrc.json
+
 
           terraform init
           terraform plan -out=tfplan
           terraform apply -auto-approve tfplan
       env:
-        terraform_token: $(TERRAFORM_CLOUD_TOKEN)  # Secret variable from Azure DevOps
+        TF_API_TOKEN: $(TERRAFORM_CLOUD_TOKEN)  # Secret variable from Azure DevOps
 
 
     - script: |
