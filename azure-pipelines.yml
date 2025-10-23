@@ -41,6 +41,12 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - checkout: self
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'my-docker-sc'
+        repository: 'pywebappdev'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
 
     # Install Terraform using the official task
     - task: TerraformInstaller@1
@@ -73,7 +79,14 @@ stages:
         ARM_TENANT_ID: $(tenantId)
 
 
-
+    - task: AzureRmWebAppDeployment@5
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'my-azure-sc'
+        appType: 'webAppContainer'
+        WebAppName: 'devopsdemo-webapp'
+        DockerNamespace: 'demoprojectn.azurecr.io'
+        DockerRepository: 'hj'
     - script: |
         echo "Deployment completed successfully!"
       displayName: "Confirm Deployment"
