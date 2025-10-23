@@ -5,7 +5,7 @@ variable "prefix" {
 
 variable "resource_group_name" {
   description = "Azure Resource Group Name"
-  default     = "devops-demo-rg"
+  default     = "devops-demo-rg22"
 }
 
 variable "location" {
