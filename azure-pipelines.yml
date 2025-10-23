@@ -86,7 +86,7 @@ stages:
         appType: 'webAppContainer'
         WebAppName: 'devopsdemo-webapp'
         DockerNamespace: 'demoprojectn.azurecr.io'
-        DockerRepository: 'hj'
+        DockerRepository: 'pywebappdev'
     - script: |
         echo "Deployment completed successfully!"
       displayName: "Confirm Deployment"
