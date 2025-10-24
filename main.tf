@@ -46,9 +46,13 @@ resource "azurerm_app_service" "app" {
   resource_group_name = azurerm_resource_group.rg.name
   app_service_plan_id = azurerm_app_service_plan.plan.id
 
-  site_config {
-    linux_fx_version = "DOCKER|python:3.10-slim"
-  }
+site_config {
+  linux_fx_version = "DOCKER|mcr.microsoft.com/azuredocs/aci-helloworld"
+}
+
+ # site_config {
+ #   linux_fx_version = "DOCKER|python:3.10-slim"
+# }
 
   app_settings = {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE = "false"
